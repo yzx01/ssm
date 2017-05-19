@@ -3,40 +3,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.web.dao.UserMapper">
-    <resultMap type="User" id="userResult">
-        <result column="user_id" property="id"/>
-        <result column="user_name" property="name"/>
-        <result column="user_birthday" property="birthday"/>
-        <result column="user_salary" property="salary"/>
+    <select id="selectByUserId" parameterType="Integer" resultMap="userResultMap">
+        SELECT * FROM  ld_user WHERE ld_id =#{id}
+    </select>
+    <resultMap id="userResultMap" type="User">
+        <id column="ld_id" property="id"></id>
+        <result column="ld_username" property="userName"></result>
+        <result column="ld_password" property="password"></result>
+        <result column="ld_sex" property="sex"></result>
+        <result column="ld_deptcode" property="deptCode"></result>
+        <result column="ld_role" property="role"></result>
     </resultMap>
 
-    <!-- 取得插入数据后的id -->
-    <insert id="save" parameterType="User">
-        insert into s_user(user_name,user_birthday,user_salary)
-        values(#{name},#{birthday},#{salary})
-    </insert>
+    <select id="userLogin" parameterType="User" resultMap="loginUserResultMap">
+        SELECT * FROM  ld_user WHERE ld_id=#{id} AND ld_password=#{password}
+    </select>
+    <resultMap id="loginUserResultMap" type="User">
+        <id column="ld_id" property="id"></id>
+        <result column="ld_password" property="password"></result>
+    </resultMap>
 
-    <update id="update" parameterType="com.web.entity.User" >
-        update s_user
-        set user_name = #{name},
-        user_birthday = #{birthday},
-        user_salary = #{salary}
-        where user_id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="int">
-        delete from s_user
-        where user_id = #{id}
-    </delete>
-
-    <select id="findById" resultMap="userResult">
-        select *
-        from s_user
-        where user_id = #{id}
+    <select id="getAllManager" resultMap="userResultMap">
+        SELECT * FROM ld_user WHERE ld_role=0
     </select>
 
-    <select id="findAll" resultMap="userResult">
-        select *
-        from s_user
-    </select>
 </mapper>
